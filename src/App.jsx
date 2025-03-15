@@ -10,6 +10,7 @@ import LogonLogoff from './components/markdown-pages/LogonLogoff'
 import FunctionsVariables from './components/markdown-pages/FunctionsVariables'
 import SendAck from './components/markdown-pages/SendAck'
 import SimpleFIXBreakdown from './components/SimpleFIXBreakdown'
+import ScriptReference from './components/markdown-pages/ScriptReference'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="functions-variables" element={<FunctionsVariables />} />
         <Route path="send-ack" element={<SendAck />} />
         <Route path="fix-breakdown" element={<SimpleFIXBreakdown />} />
+        <Route path="script-reference" element={<ScriptReference />} />
       </Route>
     </Routes>
   )

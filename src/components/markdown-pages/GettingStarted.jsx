@@ -18,7 +18,7 @@ function GettingStarted() {
           </li>
           <li>
             <a href="#basic-script" className="text-blue-600 hover:text-blue-800">
-              2. Basic Script Structure
+              2. The Basics
             </a>
           </li>
           <li>
@@ -53,29 +53,110 @@ function GettingStarted() {
         </h2>
         <p className="mb-4">
           RAFT provides a framework for testing FIX (Financial Information eXchange) messages. 
-          This document outlines how to create and execute basic FIX scripts using RAFT.
+          This document outlines how to create and execute basic FIX scripts using RAFT. The number one way to learn RAFT is by
+          taking a look at the existing scripts found in the <span className="bg-purple-100 px-1 rounded">resoures/scripts</span> folder of the RAFT repository. These scripts will
+          vary in all levels of complexity, allowing you to learn at your own pace.
         </p>
       </section>
 
       <section id="basic-script" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
         <h2 className="text-2xl font-bold mb-4 flex items-center">
           <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">2</span>
-          Basic Script Structure
+          The Basics
         </h2>
         <p className="mb-4">
           A basic RAFT script consists of a series of commands that send and acknowledge FIX messages.
+          Comments begin with #, so any line starting with # is ignored. A paragraph (separated by empty lines) within a text file is a <span className="bg-purple-100 px-1 rounded">block</span>. 
+          This is the typical format for a block:
         </p>
 
         <div className="bg-gray-50 p-4 rounded-lg mb-6">
           <h4 className="text-md font-semibold mb-2 text-gray-700">Basic Script Example:</h4>
           <TemplateText
-            description="Basic script example"
-            text={`FIX_SEND $alias 35=1|112=$message| -d |
-FIX_ACK $alias -p 112=<string:$message>`}
+            description=""
+            text={`@raft_docs_block_name
+# Some comments below the block name, if desired
+# ...
+PRINT hello world`}
           />
-          <p className="mt-2 text-sm text-gray-600">
-            Simple example showing message sending and acknowledgment
+        </div>
+
+        <div>
+          <p>The command above uses the <span className="bg-purple-100 px-1 rounded">PRINT</span> command to simply print all the text that follows (in this case, "hello world"). 
+          The name of the block must be the first line of the block and must start with an <span className="bg-purple-100 px-1 rounded">@</span>.
           </p>
+          <br></br>
+          <p>
+            If a block does not start with a name, it is considered unnamed and simply executed when encountered. Under normal circumstances, 
+            that's not the intended behavior, so all blocks should be given a name.
+          </p>
+          <br></br>
+          <p>
+            Named blocks are called (triggered) as follows:
+          </p>
+        </div>
+        <br></br>
+
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <h4 className="text-md font-semibold mb-2 text-gray-700">Calling A Named Block:</h4>
+          <TemplateText
+            description=""
+            text={`@raft_docs_print_hello_world
+raft_docs_block_name`}
+          />
+        </div>
+
+        <div>
+          <p>In the example above, the <span className="bg-purple-100 px-1 rounded">raft_docs_print_hello_world</span> block triggers the "hello world" print by simply entering its name in the block body.
+          </p>
+          <br></br>
+          <p>
+            Blocks can also take variables in <span className="bg-purple-100 px-1 rounded">$variableName</span> format:
+          </p>
+        </div>
+        <br></br>
+
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <h4 className="text-md font-semibold mb-2 text-gray-700">Using Variables:</h4>
+          <TemplateText
+            description=""
+            text={`@raft_docs_custom_printer
+$toPrint
+PRINT $toPrint`}
+          />
+        </div>
+
+        <div>
+          <p>
+            These blocks can be called with:
+          </p>
+        </div>
+        <br></br>
+
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <h4 className="text-md font-semibold mb-2 text-gray-700">Calling A Block With A Variable:</h4>
+          <TemplateText
+            description=""
+            text={`@raft_docs_custom_printer_caller
+raft_docs_custom_printer $toPrint="hello world"`}
+          />
+        </div>
+
+        <div>
+          <p>
+            Or even take arguments of their own and pass them through to other functions:
+          </p>
+        </div>
+        <br></br>
+
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <h4 className="text-md font-semibold mb-2 text-gray-700">Passing Variables To Other Functions:</h4>
+          <TemplateText
+            description=""
+            text={`@raft_docs_custom_printer_other_caller
+$toPrint
+raft_docs_custom_printer $toPrint=$toPrint`}
+          />
         </div>
 
         <div className="bg-gray-50 p-4 rounded-lg mb-6">

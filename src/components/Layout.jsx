@@ -73,6 +73,11 @@ function Layout() {
                 Getting Started
               </Link>
             </li>
+            <li>
+              <Link to="/script-reference" className="text-gray-600 hover:text-blue-600 font-medium">
+                Script Reference
+              </Link>
+            </li>
           </ul>
         </div>
 

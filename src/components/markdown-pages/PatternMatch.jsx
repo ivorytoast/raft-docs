@@ -51,7 +51,6 @@ function PatternMatch() {
         </p>
 
         <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <h3 className="text-lg font-semibold mb-2 text-gray-700">Example:</h3>
           <TemplateText
             description="Basic pattern matching"
             text={`FIX_SEND $alias 35=1|112=test| -d |
@@ -93,11 +92,10 @@ FIX_ACK $alias -p 112=test`}
             <span className="text-blue-600 mr-2">2.2</span>Multi-Value Patterns
           </h3>
           <p className="mb-4">
-            Multiple fields can be matched in sequence using delimiters. The default delimiter is SOH (/u0001), 
+            Multiple fields can be matched in sequence using delimiters. The default delimiter is <span className="bg-purple-100 px-1 rounded">SOH (/u0001)</span>, 
             but can be specified using the -d flag.
           </p>
           <div className="bg-gray-50 p-4 rounded-lg mb-6">
-            <h4 className="text-md font-semibold mb-2 text-gray-700">Basic Multi-Field Example:</h4>
             <TemplateText
               description="Ordered pattern matching with delimiters"
               text={`FIX_SEND {USERNAME} 35=x|320=ID|559=0|55=ALL_ALL|263=1 -d | -F 320
