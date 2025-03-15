@@ -55,47 +55,84 @@ function Layout() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <nav className="w-64 border-r border-gray-200 bg-white p-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Navigation</h2>
-        <ul className="space-y-2">
-          <li>
-            <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/getting-started" className="text-gray-600 hover:text-blue-600 font-medium">
-              Getting Started
-            </Link>
-          </li>
-          <li>
-            <Link to="/features" className="text-gray-600 hover:text-blue-600 font-medium">
-              Features
-            </Link>
-          </li>
-          <li>
-            <Link to="/examples" className="text-gray-600 hover:text-blue-600 font-medium">
-              Examples
-            </Link>
-          </li>
-          <li>
-            <Link to="/markdown" className="text-gray-600 hover:text-blue-600 font-medium">
-              Original Markdown
-            </Link>
-          </li>
-          <li>
-            <Link to="/fix-examples" className="text-gray-600 hover:text-blue-600 font-medium">
-              FIX Message Breakdown
-            </Link>
-          </li>
-          <li>
-            <Link 
-              to="/components" 
-              className="text-gray-600 hover:text-blue-600 font-medium"
-            >
-              FIX Component Builder
-            </Link>
-          </li>
-        </ul>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">RAFT Docs</h2>
+        
+        {/* Welcome Section */}
+        <div className="mb-6">
+          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            Welcome
+          </h3>
+          <ul className="space-y-2">
+            <li>
+              <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link to="/getting-started" className="text-gray-600 hover:text-blue-600 font-medium">
+                Getting Started
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* RAFT Fundamentals Section */}
+        <div className="mb-6">
+          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            RAFT Fundamentals
+          </h3>
+          <ul className="space-y-2">
+            <li>
+              <Link to="/pattern-match" className="text-gray-600 hover:text-blue-600 font-medium">
+                Pattern Match
+              </Link>
+            </li>
+            <li>
+              <Link to="/control-flow" className="text-gray-600 hover:text-blue-600 font-medium">
+                Control Flow
+              </Link>
+            </li>
+            <li>
+              <Link to="/logon-logoff" className="text-gray-600 hover:text-blue-600 font-medium">
+                Logon & Logoff
+              </Link>
+            </li>
+            <li>
+              <Link to="/functions-variables" className="text-gray-600 hover:text-blue-600 font-medium">
+                Functions & Variables
+              </Link>
+            </li>
+            <li>
+              <Link to="/send-ack" className="text-gray-600 hover:text-blue-600 font-medium">
+                Send & Ack
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* FIX Utilities Section */}
+        <div className="mb-6">
+          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            FIX Utilities
+          </h3>
+          <ul className="space-y-2">
+            <li>
+              <Link to="/fix-breakdown" className="text-gray-600 hover:text-blue-600 font-medium">
+                FIX Message Breakdown
+              </Link>
+            </li>
+            <li>
+              <Link to="/fix-examples" className="text-gray-600 hover:text-blue-600 font-medium">
+                FIX Template Builder
+              </Link>
+            </li>
+            <li>
+              <Link to="/components" className="text-gray-600 hover:text-blue-600 font-medium">
+                FIX Component Builder
+              </Link>
+            </li>
+          </ul>
+        </div>
       </nav>
       
       <main className="flex-1 p-8 overflow-auto">
@@ -103,7 +140,21 @@ function Layout() {
       </main>
       
       <aside className="w-64 border-l border-gray-200 bg-white p-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Settings</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-gray-800">Settings</h2>
+          <button
+            onClick={() => {
+              localStorage.removeItem('senderComputerIds')
+              localStorage.removeItem('targetComputerIds')
+              window.location.reload() // Refresh to clear the state
+            }}
+            className="px-2 py-1 text-xs rounded border border-gray-300 
+                     bg-gray-50 text-gray-600 hover:bg-gray-100"
+            title="Clear all Sender and Target Computer IDs"
+          >
+            Clear IDs
+          </button>
+        </div>
         
         <div className="mb-8 space-y-4">
           <h3 className="text-lg font-medium text-gray-800">Credentials</h3>

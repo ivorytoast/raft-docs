@@ -1,23 +1,30 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
+import HomePage from './components/markdown-pages/HomePage'
 import GettingStarted from './components/markdown-pages/GettingStarted'
 import ComponentBuilder from './components/pages/ComponentBuilder'
-import Features from './components/markdown-pages/Features'
-import Examples from './components/markdown-pages/Examples'
-import MarkdownPage from './components/MarkdownPage'
 import FIXExamples from './components/markdown-pages/FIXExamples'
+import PatternMatch from './components/markdown-pages/PatternMatch'
+import ControlFlow from './components/markdown-pages/ControlFlow'
+import LogonLogoff from './components/markdown-pages/LogonLogoff'
+import FunctionsVariables from './components/markdown-pages/FunctionsVariables'
+import SendAck from './components/markdown-pages/SendAck'
+import SimpleFIXBreakdown from './components/SimpleFIXBreakdown'
 
 function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route index element={<GettingStarted />} />
+        <Route index element={<HomePage />} />
         <Route path="getting-started" element={<GettingStarted />} />
-        <Route path="features" element={<Features />} />
-        <Route path="examples" element={<Examples />} />
-        <Route path="markdown" element={<MarkdownPage />} />
+        <Route path="pattern-match" element={<PatternMatch />} />
         <Route path="fix-examples" element={<FIXExamples />} />
         <Route path="components" element={<ComponentBuilder />} />
+        <Route path="control-flow" element={<ControlFlow />} />
+        <Route path="logon-logoff" element={<LogonLogoff />} />
+        <Route path="functions-variables" element={<FunctionsVariables />} />
+        <Route path="send-ack" element={<SendAck />} />
+        <Route path="fix-breakdown" element={<SimpleFIXBreakdown />} />
       </Route>
     </Routes>
   )

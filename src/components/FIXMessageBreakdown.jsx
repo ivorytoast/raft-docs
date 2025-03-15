@@ -24,12 +24,12 @@ function FIXMessageBreakdown() {
 
     const msgFields = []
 
-    // Add all fields with placeholders
-    msgFields.push('8={BEGINSTRING}')
+    // Add all fields with empty values by default
+    msgFields.push('8=FIX.4.4')  // Set BeginString to FIX.4.4
     msgFields.push('35=' + msgType)  // Keep MsgType as it's selected from dropdown
-    msgFields.push('49={SENDERCOMPID}')
-    msgFields.push('56={TARGETCOMPID}')
-    msgFields.push('52={SENDINGTIME}')
+    msgFields.push('49={SENDERCOMPID}')  // SenderCompID
+    msgFields.push('56={TARGETCOMPID}')  // TargetCompID
+    msgFields.push('52=')  // Leave SendingTime blank
 
     // Add message-specific fields
     const messageElement = dictionary.messages[msgType].element
@@ -38,12 +38,19 @@ function FIXMessageBreakdown() {
       const fieldName = field.getAttribute('name')
       const fieldDef = Object.entries(dictionary.fields).find(([_, f]) => f.name === fieldName)?.[0]
       if (fieldDef) {
-        msgFields.push(fieldDef + '={' + fieldName.toUpperCase() + '}')
+        // Add placeholders for username and password fields
+        if (fieldName === 'Username') {
+          msgFields.push(fieldDef + '={USERNAME}')
+        } else if (fieldName === 'Password') {
+          msgFields.push(fieldDef + '={PASSWORD}')
+        } else {
+          msgFields.push(fieldDef + '=')  // Empty value by default
+        }
       }
     })
 
-    // Add trailer fields
-    msgFields.push('10={CHECKSUM}')
+    // Add trailer field
+    msgFields.push('10=')
 
     return msgFields.join('|')
   }
@@ -165,12 +172,16 @@ function FIXMessageBreakdown() {
   const parseFixMessage = (msg) => {
     if (!msg.trim()) return []
     
-    const fields = msg.split('|')
+    // Split on pipe character and filter out empty entries
+    const fields = msg.split('|').filter(field => field.trim())
+    
     return fields
       .map(field => {
-        const [tag, value] = field.split('=')
-        if (!tag || !value) return null
-        return enrichFieldInfo(tag, value)
+        const [tag, ...valueParts] = field.split('=')
+        // Join value parts back together in case value contained '='
+        const value = valueParts.join('=')
+        if (!tag || value === undefined) return null
+        return enrichFieldInfo(tag.trim(), value.trim())
       })
       .filter(Boolean)
   }
@@ -178,7 +189,14 @@ function FIXMessageBreakdown() {
   const handleMessageChange = (e) => {
     const newMessage = e.target.value
     setMessage(newMessage)
-    setFields(parseFixMessage(newMessage))
+    
+    // Only parse if there's actual content
+    if (newMessage.trim()) {
+      const parsedFields = parseFixMessage(newMessage)
+      setFields(parsedFields)
+    } else {
+      setFields([])
+    }
   }
 
   const handleCopyField = async (field) => {
@@ -215,6 +233,49 @@ function FIXMessageBreakdown() {
     
     setMessage(newMessage)
     setFields(newFields)
+  }
+
+  // Update the handleDeleteField function
+  const handleDeleteField = (tagToDelete) => {
+    const newFields = fields.filter(field => field.tag !== tagToDelete)
+    
+    // Reapply credentials to remaining fields
+    const fieldsWithCreds = newFields.map(field => {
+      const fieldInfo = dictionary.fields[field.tag]
+      if (!fieldInfo) return field
+
+      switch(fieldInfo.name) {
+        case 'Username':
+          if (selectedUserCreds?.username && field.value === '{USERNAME}') {
+            return enrichFieldInfo(field.tag, selectedUserCreds.username)
+          }
+          break
+        case 'Password':
+          if (selectedUserCreds?.password && field.value === '{PASSWORD}') {
+            return enrichFieldInfo(field.tag, selectedUserCreds.password)
+          }
+          break
+        case 'SenderCompID':
+          if (selectedSenderId && field.value === '{SENDERCOMPID}') {
+            return enrichFieldInfo(field.tag, selectedSenderId)
+          }
+          break
+        case 'TargetCompID':
+          if (selectedTargetId && field.value === '{TARGETCOMPID}') {
+            return enrichFieldInfo(field.tag, selectedTargetId)
+          }
+          break
+      }
+      return field
+    })
+    
+    setFields(fieldsWithCreds)
+    
+    // Update the message string to remove the deleted field
+    const newMessage = fieldsWithCreds
+      .map(field => `${field.tag}=${field.value}`)
+      .join('|')
+    setMessage(newMessage)
   }
 
   // Update the useEffect to handle credential changes and include dictionary
@@ -312,6 +373,21 @@ function FIXMessageBreakdown() {
     return styles.join(' ')
   }
 
+  const handleKeyDown = (e) => {
+    if (e.key === '|') {
+      e.preventDefault()
+      const cursorPosition = e.target.selectionStart
+      const newValue = message.slice(0, cursorPosition) + '|' + message.slice(cursorPosition)
+      setMessage(newValue)
+      setFields(parseFixMessage(newValue))
+      
+      // Set cursor position after the inserted character
+      setTimeout(() => {
+        e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1)
+      }, 0)
+    }
+  }
+
   if (loading) {
     return <div>Loading FIX dictionary...</div>
   }
@@ -350,6 +426,7 @@ function FIXMessageBreakdown() {
         <textarea
           value={message}
           onChange={handleMessageChange}
+          onKeyDown={handleKeyDown}
           placeholder="Enter your FIX message here (use | as field delimiter)..."
           className="w-full h-24 px-3 py-2 text-sm border border-gray-300 rounded font-mono 
                    focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
@@ -370,6 +447,7 @@ function FIXMessageBreakdown() {
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Required</th>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Error</th>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase w-20">Action</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase w-20">Delete</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
@@ -430,13 +508,27 @@ function FIXMessageBreakdown() {
                       )}
                     </button>
                   </td>
+                  <td className="px-4 py-2 text-sm">
+                    <button
+                      onClick={() => handleDeleteField(field.tag)}
+                      disabled={field.required}
+                      className={`px-2 py-1 rounded border ${
+                        field.required
+                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          : 'bg-white border-red-300 text-red-600 hover:bg-red-50'
+                      }`}
+                      title={field.required ? "Required fields cannot be deleted" : "Delete field"}
+                    >
+                      <span className="text-xs">Delete</span>
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         ) : (
           <p className="text-gray-500 text-sm text-center py-4">
-            Enter a FIX message above to see its breakdown
+            Create a FIX message from a template!
           </p>
         )}
       </div>
