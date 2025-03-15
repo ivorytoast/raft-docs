@@ -6,85 +6,133 @@ function LogonLogoff() {
     <div className="space-y-8 text-gray-900">
       <h1 className="text-3xl font-bold mb-6">Logon & Logoff Guide</h1>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          Baseline BGC (uses default server -- currently bgccdev1, but this might change)
+      {/* Table of Contents */}
+      <div className="bg-gray-50 p-6 rounded-lg mb-8">
+        <h2 className="text-xl font-semibold mb-4">Contents</h2>
+        <ul className="space-y-2">
+          <li>
+            <a href="#basic-usage" className="text-blue-600 hover:text-blue-800">
+              1. Basic Usage
+            </a>
+          </li>
+          <li>
+            <a href="#using-alias" className="text-blue-600 hover:text-blue-800">
+              2. Using Aliases
+            </a>
+          </li>
+          <li>
+            <a href="#host-config" className="text-blue-600 hover:text-blue-800">
+              3. Host Configuration
+            </a>
+          </li>
+          <li>
+            <a href="#custom-settings" className="text-blue-600 hover:text-blue-800">
+              4. Custom Settings
+            </a>
+          </li>
+          <li>
+            <a href="#complete-example" className="text-blue-600 hover:text-blue-800">
+              5. Complete Example
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <section id="basic-usage" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+        <h2 className="text-2xl font-bold mb-4 flex items-center">
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">1</span>
+          Basic Usage
+        </h2>
+        <p className="mb-4">
+          The most basic form of FIX session management. Uses the default server (currently bgccdev1).
         </p>
-        <TemplateText
-          description="Basic logon/logoff example"
-          text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <TemplateText
+            description="Basic logon/logoff example"
+            text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
 FIX_LOGOFF {USERNAME}`}
-        />
+          />
+          <p className="mt-2 text-sm text-gray-600">
+            Basic parameters: username, password, sender computer ID, and target computer ID
+          </p>
+        </div>
       </section>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          With Alias
+      <section id="using-alias" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+        <h2 className="text-2xl font-bold mb-4 flex items-center">
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">2</span>
+          Using Aliases
+        </h2>
+        <p className="mb-4">
+          Using variables to store and reuse credentials makes scripts more maintainable.
         </p>
-        <TemplateText
-          description="Using alias variable"
-          text={`$alias={USERNAME}
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <TemplateText
+            description="Using alias variable"
+            text={`$alias={USERNAME}
 FIX_LOGON $alias {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
 FIX_LOGOFF $alias`}
-        />
+          />
+          <p className="mt-2 text-sm text-gray-600">
+            The <span className="bg-purple-100 px-1 rounded">$alias</span> variable can be reused throughout the script
+          </p>
+        </div>
       </section>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          With Host: Remember, you need to use a BGC host for BGC Target_Comp, and vice versa for GFI
+      <section id="host-config" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+        <h2 className="text-2xl font-bold mb-4 flex items-center">
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">3</span>
+          Host Configuration
+        </h2>
+        <p className="mb-4">
+          Host configuration requires matching the correct host type (BGC/GFI) with the corresponding Target_Comp.
         </p>
-        <TemplateText
-          description="Specifying host"
-          text={`$host=bgccdev1
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <TemplateText
+            description="Specifying host"
+            text={`$host=bgccdev1
 FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID} -H $host
 FIX_LOGOFF {USERNAME}`}
-        />
+          />
+          <p className="mt-2 text-sm text-gray-600">
+            Use <span className="bg-purple-100 px-1 rounded">-H</span> flag to specify the host
+          </p>
+        </div>
       </section>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          With Fix Version
+      <section id="custom-settings" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+        <h2 className="text-2xl font-bold mb-4 flex items-center">
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">4</span>
+          Custom Settings
+        </h2>
+        <p className="mb-4">
+          Customize session behavior by providing your own settings file.
         </p>
-        <TemplateText
-          description="Specifying FIX version"
-          text={`$fixVersion=4.4
-FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID} -V $fixVersion
-FIX_LOGOFF {USERNAME}`}
-        />
-      </section>
-
-      <section>
-        <p className="mb-4 text-gray-900">
-          With Settings: This allows a user to specify their own unique settings if the defaults do not satisfy their requirements
-        </p>
-        <TemplateText
-          description="Using custom settings file"
-          text={`$settingsFile=docs_config_gfi.cfg
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <TemplateText
+            description="Using custom settings file"
+            text={`$settingsFile=docs_config_gfi.cfg
 FIX_LOGON {USERNAME} {PASSWORD} JPAPI GFI -s $settingsFile
 FIX_LOGOFF {USERNAME}`}
-        />
+          />
+          <p className="mt-2 text-sm text-gray-600">
+            Use <span className="bg-purple-100 px-1 rounded">-s</span> flag to specify a custom settings file
+          </p>
+        </div>
       </section>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          Sessions are identified by the alias. Usually, the alias is just the name of the user. If, however, there are two users with the same name, one of the sessions must be given a custom alias. This is done via the -A flag -- although the user is the session is identified by the customalias parameter ("myalias" by default)
+      <section id="complete-example" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+        <h2 className="text-2xl font-bold mb-4 flex items-center">
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">5</span>
+          Complete Example
+        </h2>
+        <p className="mb-4">
+          A comprehensive example combining all available options and best practices.
         </p>
-        <TemplateText
-          description="Using custom alias"
-          text={`$alias={USERNAME}
-$customalias=myalias
-FIX_LOGON $alias {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID} -A $customalias
-FIX_LOGOFF $customalias`}
-        />
-      </section>
-
-      <section>
-        <p className="mb-4 text-gray-900">
-          Combining all of the above...
-        </p>
-        <TemplateText
-          description="Complete example with all options"
-          text={`$alias={USERNAME}
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <TemplateText
+            description="Complete example with all options"
+            text={`$alias={USERNAME}
 $password={PASSWORD}
 $senderCompID={SENDER_COMPUTER_ID}
 $targetCompID={TARGET_COMP_ID}
@@ -93,7 +141,17 @@ $fixVersion=4.4
 $settingsFile=docs_config_gfi.cfg
 FIX_LOGON $alias $password $senderCompID $targetCompID -H $host -V $fixVersion -s $settingsFile
 FIX_LOGOFF $alias`}
-        />
+          />
+          <p className="mt-2 text-sm text-gray-600">
+            <strong>Key Features:</strong>
+            <ul className="list-disc pl-5 mt-1 space-y-1">
+              <li>Variable definitions for better maintainability</li>
+              <li>Host specification with <span className="bg-purple-100 px-1 rounded">-H</span> flag</li>
+              <li>FIX version control with <span className="bg-purple-100 px-1 rounded">-V</span> flag</li>
+              <li>Custom settings with <span className="bg-purple-100 px-1 rounded">-s</span> flag</li>
+            </ul>
+          </p>
+        </div>
       </section>
     </div>
   )

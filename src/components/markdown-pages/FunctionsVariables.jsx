@@ -6,109 +6,163 @@ function FunctionsVariables() {
     <div className="space-y-8 text-gray-900">
       <h1 className="text-3xl font-bold mb-6">Functions and Variables Guide</h1>
 
-      <section>
-        <p className="mb-4 text-gray-900">
+      {/* Table of Contents */}
+      <div className="bg-gray-50 p-6 rounded-lg mb-8">
+        <h2 className="text-xl font-semibold mb-4">Contents</h2>
+        <ul className="space-y-2">
+          <li>
+            <a href="#named-blocks" className="text-blue-600 hover:text-blue-800">
+              1. Named Blocks
+            </a>
+          </li>
+          <li>
+            <a href="#block-chaining" className="text-blue-600 hover:text-blue-800">
+              2. Block Chaining
+            </a>
+          </li>
+          <li>
+            <a href="#variables" className="text-blue-600 hover:text-blue-800">
+              3. Variables and Constraints
+            </a>
+          </li>
+          <li>
+            <a href="#live-variables" className="text-blue-600 hover:text-blue-800">
+              4. Live Variables
+            </a>
+          </li>
+          <li>
+            <a href="#standard-library" className="text-blue-600 hover:text-blue-800">
+              5. Standard Library
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <section id="named-blocks" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+        <h2 className="text-2xl font-bold mb-4 flex items-center">
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">1</span>
+          Named Blocks
+        </h2>
+        <p className="mb-4">
           Blocks of text starting with "@" are treated as "named" blocks. The commands inside a block are executed in order.
         </p>
-        <TemplateText
-          description="Simple block example"
-          text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <TemplateText
+            description="Simple block example"
+            text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
 FIX_LOGOFF {USERNAME}`}
-        />
+          />
+          <p className="mt-2 text-sm text-gray-600">
+            Basic block structure with logon/logoff commands
+          </p>
+        </div>
       </section>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          A block can contain either commands to run directly or "calls" to other blocks loaded into RAFT. For example, the command below simply executes raft_docs_simple_block
+      <section id="block-chaining" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+        <h2 className="text-2xl font-bold mb-4 flex items-center">
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">2</span>
+          Block Chaining
+        </h2>
+        <p className="mb-4">
+          A block can contain either commands to run directly or "calls" to other blocks loaded into RAFT.
         </p>
-        <TemplateText
-          description="Chaining blocks example"
-          text={`raft_docs_simple_block`}
-        />
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <TemplateText
+            description="Chaining blocks example"
+            text={`raft_docs_simple_block`}
+          />
+          <p className="mt-2 text-sm text-gray-600">
+            Executes the commands defined in <span className="bg-purple-100 px-1 rounded">raft_docs_simple_block</span>
+          </p>
+        </div>
       </section>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          Blocks can also define variables in their headers. The variable names are defined after a "$" character. Variables can be defined as $name, $name=defaultValue, or $name=defaultValue:{'<constraint>'}. For valid constraint patterns, please see the pattern matching guide or the pattern_match docs file.
+      <section id="variables" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+        <h2 className="text-2xl font-bold mb-4 flex items-center">
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">3</span>
+          Variables and Constraints
+        </h2>
+        <p className="mb-4">
+          Variables can be defined in block headers using different formats:
         </p>
-        <p className="mb-4 text-gray-900">
-          If a default value is not specified, the variable name is used; if a default constraint is not provided, any value is automatically permitted. That is, $alias is equivalent to $alias=alias:{'<string>'}.
-        </p>
-        <p className="mb-4 text-gray-900">
-          Constraints ensure that the value provided by the caller matches the expected type/values of the current block. In this example, the line target=BGC:{'<string:BGC>'} requires any value passed to "$target" to match the regex BGC exactly; attempting to call the block with $target=GFI would cause a compilation error.
-        </p>
-        <p className="mb-4 text-gray-900">
-          Note: the first non-$ line is treated as the end of the header and the beginning of the body. In the example below, since FIX_LOGON and FIX_LOGOFF are system-defined, the $alias, $password, $sender, and $target are replaced with their actual values.
-        </p>
-        <TemplateText
-          description="Block with arguments definition"
-          text={`$alias
+        <ul className="list-disc pl-5 mb-4 space-y-2">
+          <li><span className="bg-purple-100 px-1 rounded">$name</span> - Simple variable</li>
+          <li><span className="bg-purple-100 px-1 rounded">$name=defaultValue</span> - Variable with default</li>
+          <li><span className="bg-purple-100 px-1 rounded">$name=defaultValue:{'<constraint>'}</span> - Variable with constraint</li>
+        </ul>
+
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <TemplateText
+            description="Block with arguments definition"
+            text={`$alias
 $password=p
 $sender=helloworld:<string>
-$target=BGC:<string:BGC>
-FIX_LOGON $alias $password $sender $target
-FIX_LOGOFF $alias`}
-        />
+$target=BGC:<string:BGC>`}
+          />
+          <p className="mt-2 text-sm text-gray-600">
+            The last line requires <span className="bg-purple-100 px-1 rounded">$target</span> to exactly match "BGC"
+          </p>
+        </div>
       </section>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          The block above provides the function definition. It can be called directly with "name $variable=actualValue" where $variable corresponds to the target block's variable -- e.g. raft_docs_block_with_arguments_definition $alias=hello would call raft_docs_block_with_arguments_definition with alias set to hello. Variables can also be passed through: $targetVariable=$currentVariable. This syntax looks up the value of the variable in the current block and passes it to the target.
+      <section id="live-variables" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+        <h2 className="text-2xl font-bold mb-4 flex items-center">
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">4</span>
+          Live Variables
+        </h2>
+        <p className="mb-4">
+          Variables can be captured from live messages and reused in subsequent commands.
         </p>
-        <p className="mb-4 text-gray-900">
-          In the example below, $myalias defaults to qa.tradera and is fed to raft_docs_block_with_arguments_definition as the alias. The sender value is hardcoded directly as PFXO_IPV_MD1. Note that the block raft_docs_block_with_arguments_definition provides defaults for password and target, so they can be safely omitted.
-        </p>
-        <TemplateText
-          description="Calling block with arguments"
-          text={`$myalias={USERNAME}
-raft_docs_block_with_arguments_definition $alias=$myalias $sender={SENDER_COMPUTER_ID}`}
-        />
-      </section>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          The $variable syntax performs all the checks at compile-time; that is, by the time RAFT runs, the lines and variables are replaced with their actual values (macros). In some situations, we may want to capture live values from an incoming FIX message (such as identifiers) and retrieve them for subsequent processing. The FIX_CAPTURE {'<alias>'} {'<tag number>'} {'<variable name>'} [-o true/false] can be used to do just that: if the -o flag is set to true, FIX_CAPTURE will look at the latest outgoing message and capture the value of the field; otherwise, the most recent incoming message is used. Variables can be loaded via LOAD_VAR(alias,variableName).
-        </p>
-        <p className="mb-4 text-gray-900">
-          The code below sends a basic security list request for TSTMKT, captures the outgoing message's 320 field into LIVEVARSAMPLE, then loads the saved result into the ACK and ensures that it was processed.
-        </p>
-        <TemplateText
-          description="Live variables simple example"
-          text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <h4 className="text-md font-semibold mb-2 text-gray-700">Basic Variable Capture:</h4>
+          <TemplateText
+            description="Live variables simple example"
+            text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
 FIX_SEND {USERNAME} 35=x|320=ID|559=0|55=TSTMKT|263=1 -d | -F 320
 FIX_CAPTURE {USERNAME} 320 LIVEVARSIMPLE -o true
 FIX_ACK {USERNAME} -p [35=y 320=LOAD_VAR({USERNAME},LIVEVARSIMPLE) 893=Y]
 FIX_LOGOFF {USERNAME}`}
-        />
+          />
+          <p className="mt-2 text-sm text-gray-600">
+            Captures field 320 into variable LIVEVARSIMPLE and uses it in subsequent ACK
+          </p>
+        </div>
+
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <h4 className="text-md font-semibold mb-2 text-gray-700">Advanced Variable Capture:</h4>
+          <TemplateText
+            description="Live variables advanced example"
+            text={`FIX_CAPTURE {USERNAME} 320 LIVEVARADVANCED -o true -n 0`}
+          />
+          <p className="mt-2 text-sm text-gray-600">
+            <span className="bg-purple-100 px-1 rounded">-n</span> flag specifies which occurrence to capture (0-indexed)
+            <br />
+            <span className="bg-purple-100 px-1 rounded">-M true</span> can be used to capture all values
+          </p>
+        </div>
       </section>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          Common functions are defined inside the standard library ("stdlib.txt"). While, technically, all the resources in the repo are shared, stdlib should contain the most commonly used patterns. One such example, is the SECURITY_LIST_REQUEST_SINGLE_SYMBOL function -- which is nearly identical to the code above, without the FIX_LOGON and FIX_LOGOFF:
+      <section id="standard-library" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+        <h2 className="text-2xl font-bold mb-4 flex items-center">
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">5</span>
+          Standard Library
+        </h2>
+        <p className="mb-4">
+          Common functions are defined inside the standard library for reuse across scripts.
         </p>
-        <TemplateText
-          description="Standard library example"
-          text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
+
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <TemplateText
+            description="Standard library example"
+            text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
 SECURITY_LIST_REQUEST_SINGLE_SYMBOL $alias={USERNAME}
 FIX_LOGOFF {USERNAME}`}
-        />
-      </section>
-
-      <section>
-        <p className="mb-4 text-gray-900">
-          If repeating groups are present in a FIX message, it's possible for a tag to appear more than once. In that case, direct variable capture may not work. Instead, FIX_CAPTURE can take additional flags: -n for the index of the desired field (0-indexed) or -M true to capture all values associated with a particular tag (separated by the specified delimiter).
-        </p>
-        <p className="mb-4 text-gray-900">
-          The example below is almost identical to the one above: the difference is that FIX_CAPTURE now looks for field 320 with index 0 (i.e. the first appeareance). If there were multiple 320=val fields, they could be indexed by providing a different value.
-        </p>
-        <TemplateText
-          description="Live variables advanced example"
-          text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
-FIX_SEND {USERNAME} 35=x|320=ID|559=0|55=TSTMKT|263=1 -d | -F 320
-FIX_CAPTURE {USERNAME} 320 LIVEVARADVANCED -o true -n 0
-FIX_ACK {USERNAME} -p [35=y 320=LOAD_VAR({USERNAME},LIVEVARADVANCED) 893=Y]
-FIX_LOGOFF {USERNAME}`}
-        />
+          />
+          <p className="mt-2 text-sm text-gray-600">
+            Uses the predefined <span className="bg-purple-100 px-1 rounded">SECURITY_LIST_REQUEST_SINGLE_SYMBOL</span> function
+          </p>
+        </div>
       </section>
     </div>
   )

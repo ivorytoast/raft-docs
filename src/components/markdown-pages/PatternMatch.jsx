@@ -6,118 +6,224 @@ function PatternMatch() {
     <div className="space-y-8 text-gray-900">
       <h1 className="text-3xl font-bold mb-6">Pattern Matching Guide</h1>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          The -p option starts a pattern match. If given "-p C=c", this will scan the message for the presence of the tag C with the exact value of c. In this case, we are making sure there is a "35" tag present in the message, with a value of "8"
+      {/* Table of Contents */}
+      <div className="bg-gray-50 p-6 rounded-lg mb-8">
+        <h2 className="text-xl font-semibold mb-4">Contents</h2>
+        <ul className="space-y-2">
+          <li>
+            <a href="#basic-patterns" className="text-blue-600 hover:text-blue-800">
+              1. Basic Pattern Matching
+            </a>
+          </li>
+          <li>
+            <a href="#advanced-patterns" className="text-blue-600 hover:text-blue-800">
+              2. Advanced Pattern Matching
+            </a>
+            <ul className="pl-4 mt-2 space-y-1">
+              <li>
+                <a href="#regex" className="text-blue-600 hover:text-blue-800">
+                  2.1 Regular Expressions
+                </a>
+              </li>
+              <li>
+                <a href="#multi-value" className="text-blue-600 hover:text-blue-800">
+                  2.2 Multi-Value Patterns
+                </a>
+              </li>
+              <li>
+                <a href="#type-constraints" className="text-blue-600 hover:text-blue-800">
+                  2.3 Type Constraints
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <section id="basic-patterns" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+        <h2 className="text-2xl font-bold mb-4 flex items-center">
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">1</span>
+          Basic Pattern Matching
+        </h2>
+
+        <p className="mb-4">
+          The simplest form of pattern matching is exact value matching.
         </p>
-        <TemplateText
-          description="Basic pattern matching example"
-          text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID} -H cdev2 -s docs_config_gfi.cfg -i SD
-NEW_ORDER_SINGLE_BUY_NO_ACK $alias={USERNAME} $symbol=EURUSD $mqsize=15 $fwdprice=11.3 $volatility=21.25 $tablecode=EURUSD_1_1_0_8_3
-FIX_ACK {USERNAME} -p [35=8] -t 3000
-FIX_LOGOFF {USERNAME}`}
-        />
+
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <h3 className="text-lg font-semibold mb-2 text-gray-700">Example:</h3>
+          <TemplateText
+            description="Basic pattern matching"
+            text={`FIX_SEND $alias 35=1|112=test| -d |
+FIX_ACK $alias -p 112=test`}
+          />
+          <p className="mt-2 text-sm text-gray-600">
+            This example shows exact matching where field 112 must exactly equal "test"
+          </p>
+        </div>
       </section>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          Now the opposite. The field "35" does NOT equal "10". Therefore, we can say it does NOT equal "10"
-        </p>
-        <TemplateText
-          description="Pattern negation example"
-          text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID} -H cdev2 -s docs_config_gfi.cfg -i SD
-NEW_ORDER_SINGLE_BUY_NO_ACK $alias={USERNAME} $symbol=EURUSD $mqsize=15 $fwdprice=11.3 $volatility=21.25 $tablecode=EURUSD_1_1_0_8_3
-FIX_ACK {USERNAME} -p [!35=10] -t 3000
-FIX_LOGOFF {USERNAME}`}
-        />
-      </section>
+      <section id="advanced-patterns" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+        <h2 className="text-2xl font-bold mb-4 flex items-center">
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">2</span>
+          Advanced Pattern Matching
+        </h2>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          Multiple fields in a row can be matched by joining them with a delimiter. If a delimiter is not specified with a -d flag, multiple fields must be separated by a /u0001 -- SOH -- character. Note: {'<?>'}  matches any string, so 8528={'<?>'}|6215={'<?>'} -d | simply matches any message that contains fields 8528 and 6215, back to back, with any value (e.g. 8528=hello|6215=world)
-        </p>
-        <TemplateText
-          description="Ordered pattern matching with delimiters"
-          text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID} -H bgccdev1
-FIX_SEND {USERNAME} 35=x|320=ID|559=0|55=ALL_ALL|263=1 -d | -F 320
-FIX_ACK {USERNAME} -p 8528=<?>|6215=<?> -d | -t 10000
-FIX_LOGOFF {USERNAME}`}
-        />
-      </section>
+        <div id="regex" className="mb-8">
+          <h3 className="text-xl font-semibold mb-3 text-gray-800">
+            <span className="text-blue-600 mr-2">2.1</span>Regular Expressions
+          </h3>
+          <p className="mb-4">
+            For more complex matching needs, regular expressions can be used.
+          </p>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          Patterns can also be matched with Boolean expressions. Whitespace-separated patterns inside [] (square brackets) are treated as an "AND": -p [A=a B=b] matches messages that contain both A=a and B=b anywhere in the message (not necessarily next to each other or in order)
-        </p>
-        <TemplateText
-          description="Boolean AND pattern matching"
-          text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID} -H bgccdev1
-FIX_SEND {USERNAME} 35=x|320=ID|559=0|55=ALL_ALL|263=1 -d | -F 320
-FIX_ACK {USERNAME} -p [167=<?> 8528=<?>|6215=<?>] -d | -t 10000
-FIX_LOGOFF {USERNAME}`}
-        />
-      </section>
+          <div className="bg-gray-50 p-4 rounded-lg mb-6">
+            <TemplateText
+              description="Regex pattern matching"
+              text={`FIX_ACK $alias -p 112=<string:test.*>`}
+            />
+            <p className="mt-2 text-sm text-gray-600">
+              Matches any string starting with "test"
+            </p>
+          </div>
+        </div>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          Multiple -p flags are treated as an "OR". If any of the given patterns is a match for a message, the check passes. That is -p A=a -p B=b will match messages that contain at least one of A=a or B=b
-        </p>
-        <TemplateText
-          description="Boolean OR pattern matching"
-          text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID} -H bgccdev1
-FIX_SEND {USERNAME} 35=x|320=ID|559=0|55=ALL_ALL|263=1 -d | -F 320
-FIX_ACK {USERNAME} -p 12345=fail -p [167=<?> 8528=<?>|6215=<?>] -d | -t 10000
-FIX_LOGOFF {USERNAME}`}
-        />
-      </section>
+        <div id="multi-value" className="mb-8">
+          <h3 className="text-xl font-semibold mb-3 text-gray-800">
+            <span className="text-blue-600 mr-2">2.2</span>Multi-Value Patterns
+          </h3>
+          <p className="mb-4">
+            Multiple fields can be matched in sequence using delimiters. The default delimiter is SOH (/u0001), 
+            but can be specified using the -d flag.
+          </p>
+          <div className="bg-gray-50 p-4 rounded-lg mb-6">
+            <h4 className="text-md font-semibold mb-2 text-gray-700">Basic Multi-Field Example:</h4>
+            <TemplateText
+              description="Ordered pattern matching with delimiters"
+              text={`FIX_SEND {USERNAME} 35=x|320=ID|559=0|55=ALL_ALL|263=1 -d | -F 320
+FIX_ACK {USERNAME} -p 8528=<?>|6215=<?> -d | -t 10000`}
+            />
+            <p className="mt-2 text-sm text-gray-600">
+              <span className="bg-purple-100 px-1 rounded">{'<?>'}</span> matches any value, so this matches any message containing fields 8528 and 6215 in sequence
+            </p>
+          </div>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          Field 12345=fail checks for an exact match: a field 12345 with the value "fail". Fields 167 and 8528, on the other hand, are allowed to match {'<?>'}, where {'<?>'} is a wildcard meaning "any" -- as long as the field is present, the match is considered successful. This can be expanded -- pattern matching supports a variety of different matches. The standard structure is as follows {'<type>'}, {'<type:constraint>'}, {'<==val1,val2==>'}, or {'<type:==val1,val2==>'}
-        </p>
-        <p className="mb-4 text-gray-900">
-          Values enclosed in ==val1,val2,val3== means that the field must match one of the given values exactly. If a type is specified, the value must match the type. Currently supported types are char, string, int, float, bool, and timestamp; and constraints are processed differently for each type.
-        </p>
-        <TemplateText
-          description="Type constraints examples"
-          text={`# char: <char:a||b||c> where || is "OR"; alternatively use <char:==a,b,c==> or <==a,b,c==>
+          <div className="bg-gray-50 p-4 rounded-lg mb-6">
+            <h4 className="text-md font-semibold mb-2 text-gray-700">Pattern Negation:</h4>
+            <TemplateText
+              description="Pattern negation"
+              text={`FIX_ACK {USERNAME} -p [!35=10]`}
+            />
+            <p className="mt-2 text-sm text-gray-600">
+              The <span className="bg-purple-100 px-1 rounded">!</span> prefix means "does NOT equal"
+            </p>
+          </div>
+        </div>
 
-# string: <string:regex> where the regex is standard java
-# since [, ", and ] are treated as special characters, they must be provided 
-# using alternative syntax -- &lbrack; for [, &rbrack; for ], and &quot; for "
-# Example matching field 12345 with any alphanumeric input with exactly 5-7 characters:
-FIX_ACK {USERNAME} -p 12345=<string:^&lbrack;a-zA-Z0-9&rbrack;{5,7}$>
+        <div id="boolean-operations" className="mb-8">
+          <h3 className="text-xl font-semibold mb-3 text-gray-800">
+            <span className="text-blue-600 mr-2">2.3</span>Boolean Operations
+          </h3>
+          <p className="mb-4">
+            Patterns can be combined using Boolean expressions. Square brackets <span className="bg-purple-100 px-1 rounded">[]</span> 
+            with whitespace-separated patterns create an "AND" condition.
+          </p>
 
-# int: <int:?>5&&?<=10||?==12> where "?" represents the unknown, || is an OR, && is an AND
-# Example matching value greater than 5 and less than or equal to 10 -- OR exactly equal to 12:
-FIX_ACK {USERNAME} -p 12345=<int:?>5&&?<=10||?==12>
+          <div className="bg-gray-50 p-4 rounded-lg mb-6">
+            <h4 className="text-md font-semibold mb-2 text-gray-700">AND Operation:</h4>
+            <TemplateText
+              description="Boolean AND pattern matching"
+              text={`FIX_ACK {USERNAME} -p [167=<?> 8528=<?>|6215=<?>]`}
+            />
+            <p className="mt-2 text-sm text-gray-600">
+              Matches messages that contain both field 167 AND the sequence 8528,6215
+            </p>
+          </div>
 
-# float: identical to int, but with support for double precision floats
-FIX_ACK {USERNAME} -p 12345=<float:?>5.0&&?<=10||?==12.55>
+          <div className="bg-gray-50 p-4 rounded-lg mb-6">
+            <h4 className="text-md font-semibold mb-2 text-gray-700">OR Operation:</h4>
+            <TemplateText
+              description="Boolean OR pattern matching"
+              text={`FIX_ACK {USERNAME} -p 12345=fail -p [167=<?> 8528=<?>|6215=<?>]`}
+            />
+            <p className="mt-2 text-sm text-gray-600">
+              Multiple <span className="bg-purple-100 px-1 rounded">-p</span> flags create an OR condition
+            </p>
+          </div>
+        </div>
 
-# bool: <bool:true> or <bool:false> 
-# Legal values are (case-insensitive): y, n, yes, no, 1, 0, t, true, f, false
-FIX_ACK {USERNAME} -p 12345=<bool:true>
+        <div id="type-constraints" className="mb-8">
+          <h3 className="text-xl font-semibold mb-3 text-gray-800">
+            <span className="text-blue-600 mr-2">2.4</span>Type Constraints
+          </h3>
+          <p className="mb-4">
+            Values can be constrained by type and specific conditions using the syntax:
+            <span className="bg-purple-100 px-1 rounded">{'<type>'}</span>, 
+            <span className="bg-purple-100 px-1 rounded">{'<type:constraint>'}</span>, or
+            <span className="bg-purple-100 px-1 rounded">{'<type:==val1,val2==>'}</span>
+          </p>
 
-# timestamp: <timestamp>, <timestamp:exact>, or <timestamp:function>
-# Timestamps can process an exact time (<timestamp:12345>) or use functions:
-# NOW(), PLUS()/MINUS() with time units (YEARS, MONTHS, WEEKS, DAYS, HOURS, MINUTES, SECONDS)
-# Example checking for timestamp between now and 15 seconds from now:
+          <div className="space-y-6">
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h4 className="text-md font-semibold mb-2 text-gray-700">Character Type:</h4>
+              <TemplateText
+                description="Character constraints"
+                text={`FIX_ACK {USERNAME} -p field=<char:a||b||c>
+# Alternative: <char:==a,b,c==> or <==a,b,c==>`}
+              />
+            </div>
+
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h4 className="text-md font-semibold mb-2 text-gray-700">String Type (Regex):</h4>
+              <TemplateText
+                description="String pattern with regex"
+                text={`# Match exactly 5-7 alphanumeric characters
+FIX_ACK {USERNAME} -p 12345=<string:^[a-zA-Z0-9]{5,7}$>`}
+              />
+            </div>
+
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h4 className="text-md font-semibold mb-2 text-gray-700">Numeric Types:</h4>
+              <TemplateText
+                description="Integer and float constraints"
+                text={`# Integer: greater than 5 AND less than or equal to 10, OR exactly 12
+FIX_ACK {USERNAME} -p field=<int:?>5&&?<=10||?==12>
+
+# Float: similar syntax with decimal support
+FIX_ACK {USERNAME} -p price=<float:?>5.0&&?<=10||?==12.55>`}
+              />
+            </div>
+
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h4 className="text-md font-semibold mb-2 text-gray-700">Timestamp Type:</h4>
+              <TemplateText
+                description="Timestamp constraints"
+                text={`# Check for timestamp between now and 15 seconds from now
 FIX_ACK {USERNAME} -p 60=<timestamp:?>=NOW()&&?<PLUS(NOW(),SECONDS(15))>`}
-        />
-      </section>
+              />
+            </div>
+          </div>
+        </div>
 
-      <section>
-        <p className="mb-4 text-gray-900">
-          What about whitespace? To have whitespace -- add quotes around the whole pattern. Alternatively, multi-line blocks can be enclosed in ``` ```
-        </p>
-        <TemplateText
-          description="Pattern matching with whitespace"
-          text={`FIX_LOGON {USERNAME}{PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID} -H cdev2 -s docs_config_gfi.cfg -i SD
-NEW_ORDER_SINGLE_BUY_NO_ACK $alias={USERNAME} $symbol=EURUSD $mqsize=15 $fwdprice=11.3 $volatility=21.25 
-FIX_ACK {USERNAME} -p "!35=It Accepts This Whitespace As    Valid" -t 3000
-FIX_LOGOFF {USERNAME}`}
-        />
+        <div id="whitespace" className="mt-8">
+          <h3 className="text-xl font-semibold mb-3 text-gray-800">
+            <span className="text-blue-600 mr-2">2.5</span>Handling Whitespace
+          </h3>
+          <p className="mb-4">
+            To include whitespace in patterns, either:
+          </p>
+          <ul className="list-disc pl-5 mb-4 space-y-2">
+            <li>Enclose the pattern in quotes</li>
+            <li>Use multi-line blocks with triple backticks</li>
+          </ul>
+
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <TemplateText
+              description="Pattern matching with whitespace"
+              text={`FIX_ACK {USERNAME} -p "35=It Accepts This Whitespace As    Valid"`}
+            />
+          </div>
+        </div>
       </section>
     </div>
   )
