@@ -122,8 +122,8 @@ function Layout() {
           </h3>
           <ul className="space-y-2">
             <li>
-              <Link to="/special-characters" className="text-gray-600 hover:text-blue-600 font-medium">
-                Special Characters
+              <Link to="/quick-reference" className="text-gray-600 hover:text-blue-600 font-medium">
+                Quick Reference
               </Link>
             </li>
           </ul>
