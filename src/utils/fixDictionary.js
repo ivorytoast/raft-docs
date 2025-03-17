@@ -85,7 +85,7 @@ export function useFIXDictionary() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetch('/src/utils/fixDictionary.xml')
+    fetch('/fixDictionary.xml')
       .then(response => response.text())
       .then(xmlText => {
         const parser = new DOMParser()
