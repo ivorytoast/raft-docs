@@ -75,7 +75,7 @@ function Layout() {
             </li>
             <li>
               <Link to="/script-reference" className="text-gray-600 hover:text-blue-600 font-medium">
-                Script Reference
+                Script Breakdown
               </Link>
             </li>
           </ul>
@@ -110,6 +110,20 @@ function Layout() {
             <li>
               <Link to="/send-ack" className="text-gray-600 hover:text-blue-600 font-medium">
                 Send & Ack
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* RAFT Reference Section */}
+        <div className="mb-6">
+          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            RAFT Reference
+          </h3>
+          <ul className="space-y-2">
+            <li>
+              <Link to="/special-characters" className="text-gray-600 hover:text-blue-600 font-medium">
+                Special Characters
               </Link>
             </li>
           </ul>

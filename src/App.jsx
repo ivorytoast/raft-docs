@@ -11,6 +11,7 @@ import FunctionsVariables from './components/markdown-pages/FunctionsVariables'
 import SendAck from './components/markdown-pages/SendAck'
 import SimpleFIXBreakdown from './components/SimpleFIXBreakdown'
 import ScriptReference from './components/markdown-pages/ScriptReference'
+import SpecialCharacters from './components/markdown-pages/SpecialCharacters'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="send-ack" element={<SendAck />} />
         <Route path="fix-breakdown" element={<SimpleFIXBreakdown />} />
         <Route path="script-reference" element={<ScriptReference />} />
+        <Route path="special-characters" element={<SpecialCharacters />} />
       </Route>
     </Routes>
   )
