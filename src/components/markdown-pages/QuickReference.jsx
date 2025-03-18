@@ -353,7 +353,7 @@ function QuickReference() {
         </div>
       </DocSection>
 
-      <DocSection id="misc-commands" number="5" title="Miscellaneous Commands">
+      <DocSection id="misc-commands" number="4" title="Miscellaneous Commands">
         <div className="space-y-4">
           {miscCommands.map((cmd, index) => (
             <div key={index} className="bg-gray-50 p-4 rounded-lg">
@@ -372,7 +372,7 @@ function QuickReference() {
         </div>
       </DocSection>
 
-      <DocSection id="endpoints" number="4" title="RAFT Endpoints">
+      <DocSection id="endpoints" number="5" title="RAFT Endpoints">
         <div className="space-y-6">
           {endpoints.map((group, index) => (
             <div key={index} className="bg-gray-50 p-4 rounded-lg">

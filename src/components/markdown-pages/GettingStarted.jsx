@@ -12,316 +12,197 @@ function GettingStarted() {
         <h2 className="text-xl font-semibold mb-4">Contents</h2>
         <ul className="space-y-2">
           <li>
-            <a href="#overview" className="text-blue-600 hover:text-blue-800">
-              1. FIX Testing Overview
+            <a href="#what-is-raft" className="text-blue-600 hover:text-blue-800">
+              1. What is RAFT?
             </a>
           </li>
           <li>
-            <a href="#basic-script" className="text-blue-600 hover:text-blue-800">
-              2. The Basics
+            <a href="#raft-scripts" className="text-blue-600 hover:text-blue-800">
+              2. Understanding RAFT Scripts
             </a>
           </li>
           <li>
-            <a href="#running-tests" className="text-blue-600 hover:text-blue-800">
-              3. Running Tests
-            </a>
-          </li>
-          <li>
-            <a href="#advanced-script" className="text-blue-600 hover:text-blue-800">
-              4. Advanced Script Structure
-            </a>
-            <ul className="pl-4 mt-2 space-y-1">
-              <li>
-                <a href="#script-breakdown" className="text-blue-600 hover:text-blue-800">
-                  4.1 Script Breakdown
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="#standard-library" className="text-blue-600 hover:text-blue-800">
-              5. Standard Library
+            <a href="#creating-scripts" className="text-blue-600 hover:text-blue-800">
+              3. Creating Your First Script
             </a>
           </li>
         </ul>
       </div>
 
-      <section id="overview" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+      <section id="what-is-raft" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
         <h2 className="text-2xl font-bold mb-4 flex items-center">
           <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">1</span>
-          FIX Testing Overview
+          What is RAFT?
         </h2>
-        <p className="mb-4">
-          RAFT provides a framework for testing FIX (Financial Information eXchange) messages. 
-          This document outlines how to create and execute basic FIX scripts using RAFT. The number one way to learn RAFT is by
-          taking a look at the existing scripts found in the <span className="bg-purple-100 px-1 rounded">resoures/scripts</span> folder of the RAFT repository. These scripts will
-          vary in all levels of complexity, allowing you to learn at your own pace.
+        <p className="mb-6">
+          RAFT (Reliable and Automated Framework for Testing) is a specialized testing framework built for FIX APIs 
+          in enterprise environments. Unlike traditional FIX testing tools that often require complex programming knowledge,
+          RAFT provides a simple, text-based approach while maintaining powerful testing capabilities.
         </p>
+
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Testing Flexibility</h3>
+            <p className="text-gray-600 mb-2">
+              RAFT goes beyond simple message sending and receiving, offering sophisticated testing capabilities:
+            </p>
+            <ul className="list-disc pl-5 mt-2 space-y-2 text-gray-600">
+              <li>
+                <strong>Advanced Pattern Matching:</strong> Match specific fields, wildcards, or complex patterns in FIX messages.
+                For example, verify order acknowledgments contain the correct order ID while ignoring timestamp fields.
+              </li>
+              <li>
+                <strong>Conditional Logic:</strong> Create dynamic tests using IF, OR, and NOT statements. 
+                Tests can branch based on message content, making it possible to handle different market conditions 
+                or error scenarios.
+              </li>
+              <li>
+                <strong>Variable System:</strong> Capture and reuse data from FIX messages. Store order IDs, prices, 
+                or any field value to use later in the test, enabling complex trading scenarios and verification steps.
+              </li>
+              <li>
+                <strong>Multi-Message Handling:</strong> Process multiple messages simultaneously, essential for testing 
+                market data feeds or complex trading workflows where order updates generate multiple messages.
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Code Reusability</h3>
+            <p className="text-gray-600 mb-2">
+              RAFT's block system transforms test writing from repetitive scripting to efficient, modular development:
+            </p>
+            <ul className="list-disc pl-5 mt-2 space-y-2 text-gray-600">
+              <li>
+                <strong>Standard Library:</strong> Access pre-built blocks for common FIX operations. For example, use 
+                standardized blocks for market data subscription across different asset classes without duplicating code.
+              </li>
+              <li>
+                <strong>Block Chaining:</strong> Combine blocks to create complex test scenarios. Chain order entry, 
+                modification, and cancellation blocks to test complete trading workflows.
+              </li>
+              <li>
+                <strong>Parameterized Testing:</strong> Create one block that can test multiple scenarios by passing 
+                different parameters. Test the same order flow with different quantities, prices, or instruments.
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Environment Management</h3>
+            <p className="text-gray-600 mb-2">
+              RAFT simplifies the complexity of testing across multiple environments:
+            </p>
+            <ul className="list-disc pl-5 mt-2 space-y-2 text-gray-600">
+              <li>
+                <strong>Multi-Environment Testing:</strong> Run the same test across development and QA environments 
+                simultaneously. Identify environment-specific issues by comparing test results across all non-production environments.
+              </li>
+              <li>
+                <strong>Credential Management:</strong> Handle hundreds of login credentials without embedding them in test scripts.
+                Use aliases to reference credentials, making tests portable across environments.
+              </li>
+              <li>
+                <strong>Parallel Testing:</strong> Test the same scenario with different users simultaneously. Run critical path 
+                tests with multiple users to verify system behavior under various conditions.
+              </li>
+              <li>
+                <strong>Environment Tracking:</strong> Monitor how system behavior changes across environments over time.
+                Identify regressions or inconsistencies between environments automatically.
+              </li>
+            </ul>
+          </div>
+        </div>
       </section>
 
-      <section id="basic-script" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+      <section id="raft-scripts" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
         <h2 className="text-2xl font-bold mb-4 flex items-center">
           <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">2</span>
-          The Basics
+          Understanding RAFT Scripts
         </h2>
-        <p className="mb-4">
-          A basic RAFT script consists of a series of commands that send and acknowledge FIX messages.
-          Comments begin with #, so any line starting with # is ignored. A paragraph (separated by empty lines) within a text file is a <span className="bg-purple-100 px-1 rounded">block</span>. 
-          This is the typical format for a block:
+        <p className="mb-6">
+          A RAFT script is a text file in the <span className="bg-purple-100 px-1 rounded">resources/scripts</span> folder 
+          that contains a series of actions for testing FIX functionality. Scripts are designed to be simple to create 
+          and maintain, requiring only basic text editing capabilities.
         </p>
 
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <h4 className="text-md font-semibold mb-2 text-gray-700">Basic Script Example:</h4>
-          <TemplateText
-            description=""
-            text={`@raft_docs_block_name
-# Some comments below the block name, if desired
-# ...
-PRINT hello world`}
-          />
-        </div>
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Script Structure</h3>
+            <ul className="list-disc pl-5 space-y-1 text-gray-600">
+              <li>Actions are separated by newlines</li>
+              <li>Empty lines are ignored</li>
+              <li>Comments start with # and are ignored during execution</li>
+            </ul>
+          </div>
 
-        <div>
-          <p>The command above uses the <span className="bg-purple-100 px-1 rounded">PRINT</span> command to simply print all the text that follows (in this case, "hello world"). 
-          The name of the block must be the first line of the block and must start with an <span className="bg-purple-100 px-1 rounded">@</span>.
-          </p>
-          <br></br>
-          <p>
-            If a block does not start with a name, it is considered unnamed and simply executed when encountered. Under normal circumstances, 
-            that's not the intended behavior, so all blocks should be given a name.
-          </p>
-          <br></br>
-          <p>
-            Named blocks are called (triggered) as follows:
-          </p>
-        </div>
-        <br></br>
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Built-in Actions</h3>
+            <p className="text-gray-600">
+              RAFT provides common actions like FIX_LOGON FIX_SEND or even PRINT to handle typical testing actions. These 
+              built-in actions simplify the process of logging in, sending messages, acknowledging responses, and 
+              logging off.
+            </p>
+          </div>
 
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <h4 className="text-md font-semibold mb-2 text-gray-700">Calling A Named Block:</h4>
-          <TemplateText
-            description=""
-            text={`@raft_docs_print_hello_world
-raft_docs_block_name`}
-          />
-        </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-md font-semibold mb-2 text-gray-700">Example Script:</h4>
+            <TemplateText
+              description=""
+              text={`@MY_NEW_SCRIPT
+# This is a comment
+PRINT hi!
 
-        <div>
-          <p>In the example above, the <span className="bg-purple-100 px-1 rounded">raft_docs_print_hello_world</span> block triggers the "hello world" print by simply entering its name in the block body.
-          </p>
-          <br></br>
-          <p>
-            Blocks can also take variables in <span className="bg-purple-100 px-1 rounded">$variableName</span> format:
-          </p>
-        </div>
-        <br></br>
-
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <h4 className="text-md font-semibold mb-2 text-gray-700">Using Variables:</h4>
-          <TemplateText
-            description=""
-            text={`@raft_docs_custom_printer
-$toPrint
-PRINT $toPrint`}
-          />
-        </div>
-
-        <div>
-          <p>
-            These blocks can be called with:
-          </p>
-        </div>
-        <br></br>
-
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <h4 className="text-md font-semibold mb-2 text-gray-700">Calling A Block With A Variable:</h4>
-          <TemplateText
-            description=""
-            text={`@raft_docs_custom_printer_caller
-raft_docs_custom_printer $toPrint="hello world"`}
-          />
-        </div>
-
-        <div>
-          <p>
-            Or even take arguments of their own and pass them through to other functions:
-          </p>
-        </div>
-        <br></br>
-
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <h4 className="text-md font-semibold mb-2 text-gray-700">Passing Variables To Other Functions:</h4>
-          <TemplateText
-            description=""
-            text={`@raft_docs_custom_printer_other_caller
-$toPrint
-raft_docs_custom_printer $toPrint=$toPrint`}
-          />
-        </div>
-
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <h4 className="text-md font-semibold mb-2 text-gray-700">Key Components:</h4>
-          <ol className="list-decimal pl-5 space-y-2">
-            <li><strong>Set Up the FIX Message:</strong> Use the <span className="bg-purple-100 px-1 rounded">FIX_SEND</span> command to construct and send a FIX message.</li>
-            <li><strong>Acknowledge the Message:</strong> Use the <span className="bg-purple-100 px-1 rounded">FIX_ACK</span> command to acknowledge the receipt.</li>
-          </ol>
+# Call the script
+MY_NEW_SCRIPT`}
+            />
+          </div>
         </div>
       </section>
 
-      <section id="running-tests" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+      <section id="creating-scripts" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
         <h2 className="text-2xl font-bold mb-4 flex items-center">
           <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">3</span>
-          Running Tests
+          Creating Your First Script
         </h2>
-        <h3 className="text-xl font-semibold mb-3">How To Run The Test Using Intellij IDE</h3>
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <ol className="list-decimal pl-5 space-y-2">
-            <li>Create a new 'Application' run configuration</li>
-            <li>Set the main class to <span className="bg-purple-100 px-1 rounded">com.bgcgroup.fx.raft.RaftMain</span></li>
-            <li>CLI Arguments:
-              <ul className="list-disc pl-5 mt-2">
-                <li>-l</li>
-                <li>-d scripts/{'{folder}'}/{'{script_name}'}.txt</li>
-              </ul>
-            </li>
-          </ol>
-        </div>
-      </section>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-xl font-semibold mb-3">Step 1: Create the File</h3>
+            <p>Create a new file in the <span className="bg-purple-100 px-1 rounded">resources/scripts</span> folder. You can also create a new folder to organize your scripts.</p>
+          </div>
 
-      <section id="advanced-script" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-        <h2 className="text-2xl font-bold mb-4 flex items-center">
-          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">4</span>
-          Advanced Script Structure
-        </h2>
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <h4 className="text-md font-semibold mb-2 text-gray-700">Advanced Script Example:</h4>
-          <TemplateText
-            description="Advanced script example"
-            text={`@SECURITY_TEST_CHECK
-$alias
-$message=helloworld
-FIX_SEND $alias 35=1|112=$message| -d |
-FIX_ACK $alias -p 112=<string:$message>`}
-          />
-          <p className="mt-2 text-sm text-gray-600">
-            Example showing named blocks, variables, and pattern matching
-          </p>
-        </div>
+          <div>
+            <h3 className="text-xl font-semibold mb-3">Step 2: Define a Block</h3>
+            <p>Add <span className="bg-purple-100 px-1 rounded">@MY_NEW_SCRIPT</span> at the top of your file. This creates a "Raft Block" - similar to a function in programming or a reusable recipe.</p>
+          </div>
 
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <h4 className="text-md font-semibold mb-2 text-gray-700">Script Components:</h4>
-          <ol className="list-decimal pl-5 space-y-2">
-            <li><strong>Define the Alias</strong> (To be explained by Andrey)</li>
-            <li><strong>Set Up the FIX Message:</strong> Use the <span className="bg-purple-100 px-1 rounded">FIX_SEND</span> command to construct and send a FIX message.</li>
-            <li><strong>Acknowledge the Message:</strong> Use the <span className="bg-purple-100 px-1 rounded">FIX_ACK</span> command to acknowledge the receipt.</li>
-            <li><strong>Execute the Script:</strong> Run the script to send the message and receive acknowledgment.</li>
-          </ol>
-        </div>
+          <div>
+            <h3 className="text-xl font-semibold mb-3">Step 3: Add Actions</h3>
+            <p>Add actions under your block name. For example: <span className="bg-purple-100 px-1 rounded">PRINT hi!</span></p>
+          </div>
 
-        <div id="script-breakdown" className="mt-8">
-          <h3 className="text-xl font-semibold mb-3 text-gray-800">
-            <span className="text-blue-600 mr-2">4.1</span>Script Breakdown
-          </h3>
-          <div className="space-y-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="py-1">
-                <span className="bg-blue-100 pr-2 pl-1 py-1 rounded">@SECURITY_TEST_CHECK</span>
-              </div>
-              <p className="mt-2 text-gray-600">To be explained by Andrey</p>
-            </div>
-
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="py-1">
-                <span className="bg-blue-100 pr-2 pl-1 py-1 rounded">$alias</span>
-              </div>
-              <p className="mt-2 text-gray-600">To be explained by Andrey</p>
-            </div>
-
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="py-1">
-                <span className="bg-blue-100 pr-2 pl-1 py-1 rounded">$message=helloworld</span>
-              </div>
-              <p className="mt-2 text-gray-600">
-                This line defines a variable <span className="bg-purple-100 px-1 rounded">$message</span> with the value 
-                <span className="bg-purple-100 px-1 rounded">helloworld</span>. This variable can be used in the FIX message 
-                to dynamically insert values. It is case-sensitive.
-              </p>
-            </div>
+          <div>
+            <h3 className="text-xl font-semibold mb-3">Step 4: Call the Block</h3>
+            <p>At the end of the file, add <span className="bg-purple-100 px-1 rounded">MY_NEW_SCRIPT</span> to run the block.</p>
           </div>
         </div>
-      </section>
-
-      <section id="available-commands" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 mt-8">
-        <h2 className="text-2xl font-bold mb-4 flex items-center">
-          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">4.2</span>
-          Available Commands
-        </h2>
-        <p className="mb-4 italic">To be completed by Andrey with all commands</p>
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Command</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap font-mono">FIX_SEND</td>
-                  <td className="px-6 py-4">Sends a FIX message to the specified session alias.</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap font-mono">FIX_ACK</td>
-                  <td className="px-6 py-4">Acknowledges the receipt of a FIX message.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <section id="standard-library" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-        <h2 className="text-2xl font-bold mb-4 flex items-center">
-          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">5</span>
-          Standard Library
-        </h2>
-        <h3 className="text-xl font-semibold mb-3">Overview</h3>
-        <p className="mb-4">
-          Once users start to create multiple scripts, they will find that there are common patterns and functions that can be reused across different scripts.
-          To facilitate this, RAFT provides a standard library of functions and commands that can be used in your scripts. This section outlines the available functions and how to use them effectively.
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">How To Define The Standard Library</h3>
-        <p className="mb-4">
-          Create a file called: <span className="bg-purple-100 px-1 rounded">stdlib.txt</span>
-          <br />
-          <em>(To be explained by Andrey if it has to be called this or can be called anything)</em>
-        </p>
-
-        <h3 className="text-xl font-semibold mt-6 mb-3">How To Include The Standard Library</h3>
-        <p className="mb-4 italic">To be explained by Andrey</p>
       </section>
 
       <section id="more-info" className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 mt-8">
-        <h2 className="text-2xl font-bold mb-4 flex items-center">
-          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">6</span>
-          For More Information
-        </h2>
+        <h2 className="text-2xl font-bold mb-4">For More Information</h2>
         <p className="mb-4">
           For detailed information about specific topics, please visit:
         </p>
         <div className="bg-gray-50 p-4 rounded-lg">
           <ul className="list-disc pl-5 space-y-2">
+            <li><Link to="/logon-logoff" className="text-blue-600 hover:text-blue-800">Logon & Logoff Guide</Link> - Learn about FIX session management</li>
+            <li><Link to="/send-ack" className="text-blue-600 hover:text-blue-800">Send & Ack Guide</Link> - Learn about sending and acknowledging FIX messages</li>
+            <li><Link to="/functions-variables" className="text-blue-600 hover:text-blue-800">Functions & Variables Guide</Link> - Learn about functions and variables in RAFT</li>
             <li><Link to="/pattern-match" className="text-blue-600 hover:text-blue-800">Pattern Matching Guide</Link> - Learn how to match FIX messages</li>
             <li><Link to="/control-flow" className="text-blue-600 hover:text-blue-800">Control Flow Guide</Link> - Learn about control flow in RAFT</li>
-            <li><Link to="/logon-logoff" className="text-blue-600 hover:text-blue-800">Logon & Logoff Guide</Link> - Learn about FIX session management</li>
-            <li><Link to="/functions-variables" className="text-blue-600 hover:text-blue-800">Functions & Variables Guide</Link> - Learn about functions and variables in RAFT</li>
-            <li><Link to="/send-ack" className="text-blue-600 hover:text-blue-800">Send & Ack Guide</Link> - Learn about sending and acknowledging FIX messages</li>
           </ul>
         </div>
       </section>
-
     </div>
   )
 }

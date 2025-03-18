@@ -1,0 +1,36 @@
+Getting Started Guide:
+1. Realizing what Raft is:
+    Raft, otherwise known as Reliable and Automated Framework for Testing, was built for our team to test our
+    internal FIX apis. What we realized is that the existing tools worked for very rigid scenarios, and did not 
+    deal with the most common problems we were having with testing. For example, we would need the ablity to quickly
+    switch between one of team's four development or twelve QA environments. We have hudnreds of different logins and wanted the 
+    ability to login like a normal username/password authentication scheme. Raft also has enterprise in mind. For instance,
+    keeping with authentication, one thing we allow is to use the same username within the same test for different environments.
+    This would essentially allow us to have a critical path test running all 16 non-production environments at once, allowing us to
+    understand how our code is changing on environment level over time. This is just one example of the multitude of considerations as
+    Raft was designed to deal with the highly regulated and testing focused business we are in
+
+2. So what is a Raft script:
+    Essentially, a Raft script is text file found in resources/scripts within the Raft repository. As long as you have write access
+    to the resources/scripts folder in the Raft repo, then you can create a script. This means you don't need an IDE, just any plain text editor.
+    Inside this file are Raft actions. These actions are separated by a newline. For example, an empty line is ignored. A line that starts with a "#" is a comment
+    Raft has built-in, such as "FIX_LOGON" or "FIX_SEND" which are used to preload functionality for a very common use case. In this scenario, almost every script involves
+    a login, send some form of message, ackowledging a field, and log offing. Therefore, all 4 of those actions have corresponding built in actions.
+    
+3. So if I know what Raft is and what is a script, how do I make one?
+    To begin, go to the resources/scripts folder in the Raft directory. Then create a file -- or even better -- create a folder. Then create a file within that newly created folder.
+    Raft will pick up on this new folder and/or file you have just created. Of course, if you don't add anything into the file, nothing is going to happen. Raft will essentially ignore internal
+    But that's no fun. Let's add some functionality. Add the following command to the top: "@MY_NEW_SCRIPT". You just created a "Raft Block". If you come from a programming background, this is equiavlent to 
+    a function. If you don't come from a programming background, this is an equivalent to a recipe that can be run again and again. And you just named that recipe: "MY_NEW_SCRIPT"
+    But there is no point of creating a block if you don't run it. Let's run it. At the end of the file, paste the following: "MY_NEW_SCRIPT"
+    But doing this, you are telling RAFT to run all the actions under "@MY_NEW_SCRIPT". Since you have no actions so far, nothing is going to be run. So lets fix that.
+    Underneath @MY_NEW_SCRIPT, add the following line: "PRINT hi!". You have just created your first fully functioning Raft script!
+
+4. I just created a script -- how do I run it. The easiest way is through the Intellij IDE (you can run it through any web browser or cURL command).
+But if you can open the project Intellij, you can create a new run configuration. It should be of type "Application". Set the main class to: "com.bgcgroup.fx.raft.RaftMain"
+Lastly, add two CLI options:
+1. -f docs_baseline.cfg 
+2. -r scripts\{path_to_your_script_file}.txt
+
+5. Once you press the run button, you are going to see logs start appearing and at the end of the logs, you should see the following text
+appear: "All Tests Succeeded." This means everything worked and you just created and ran your first Raft FIX test!

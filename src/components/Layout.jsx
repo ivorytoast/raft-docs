@@ -88,18 +88,13 @@ function Layout() {
           </h3>
           <ul className="space-y-2">
             <li>
-              <Link to="/pattern-match" className="text-gray-600 hover:text-blue-600 font-medium">
-                Pattern Match
-              </Link>
-            </li>
-            <li>
-              <Link to="/control-flow" className="text-gray-600 hover:text-blue-600 font-medium">
-                Control Flow
-              </Link>
-            </li>
-            <li>
               <Link to="/logon-logoff" className="text-gray-600 hover:text-blue-600 font-medium">
                 Logon & Logoff
+              </Link>
+            </li>
+            <li>
+              <Link to="/send-ack" className="text-gray-600 hover:text-blue-600 font-medium">
+                Send & Ack
               </Link>
             </li>
             <li>
@@ -108,8 +103,13 @@ function Layout() {
               </Link>
             </li>
             <li>
-              <Link to="/send-ack" className="text-gray-600 hover:text-blue-600 font-medium">
-                Send & Ack
+              <Link to="/pattern-match" className="text-gray-600 hover:text-blue-600 font-medium">
+                Pattern Match
+              </Link>
+            </li>
+            <li>
+              <Link to="/control-flow" className="text-gray-600 hover:text-blue-600 font-medium">
+                Control Flow
               </Link>
             </li>
           </ul>

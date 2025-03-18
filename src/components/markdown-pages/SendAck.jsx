@@ -4,7 +4,7 @@ import TemplateText from '../TemplateText'
 function SendAck() {
   return (
     <div className="space-y-8 text-gray-900">
-      <h1 className="text-3xl font-bold mb-6">FIX Send and Ack Guide</h1>
+      <h1 className="text-3xl font-bold mb-6">Send and Ack Guide</h1>
 
       {/* Table of Contents */}
       <div className="bg-gray-50 p-6 rounded-lg mb-8">
@@ -59,7 +59,8 @@ function SendAck() {
           <h4 className="text-md font-semibold mb-2 text-gray-700">Basic Send Example:</h4>
           <TemplateText
             description="Basic send example"
-            text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
+            text={`@basic_send_example
+FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
 FIX_SEND {USERNAME} 35=1|112=sendtest| -d |
 FIX_LOGOFF {USERNAME}`}
           />
@@ -82,7 +83,8 @@ FIX_LOGOFF {USERNAME}`}
         <div className="bg-gray-50 p-4 rounded-lg mb-6">
           <TemplateText
             description="Basic ack example"
-            text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
+            text={`@basic_ack_example
+FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
 FIX_SEND {USERNAME} 35=1|112=acktest| -d |
 FIX_ACK {USERNAME} -p 112=acktest
 FIX_LOGOFF {USERNAME}`}
@@ -107,7 +109,8 @@ FIX_LOGOFF {USERNAME}`}
           <h4 className="text-md font-semibold mb-2 text-gray-700">Wait Examples:</h4>
           <TemplateText
             description="Timing control example"
-            text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
+            text={`@timing_control_example
+FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
 WAIT -t 1000
 FIX_SEND {USERNAME} 35=1|112=timing| -d |
 FIX_ACK {USERNAME} -p 112=timing -t 2500
@@ -141,7 +144,8 @@ FIX_LOGOFF {USERNAME}`}
             <h4 className="text-md font-semibold mb-2 text-gray-700">Field Setting Examples:</h4>
             <TemplateText
               description="Advanced send examples"
-              text={`FIX_SEND {USERNAME} 35=1 -F 112
+              text={`@advanced_send_examples
+FIX_SEND {USERNAME} 35=1 -F 112
 # Use field names (with caution)
 FIX_SEND {USERNAME} 35=1 -F TestReqID`}
             />
@@ -162,7 +166,8 @@ FIX_SEND {USERNAME} 35=1 -F TestReqID`}
           <div className="bg-gray-50 p-4 rounded-lg mb-6">
             <TemplateText
               description="Group handling example"
-              text={`# Market data request with two MDEntryTypes (bid/offer)
+              text={`@group_handling_example
+# Market data request with two MDEntryTypes (bid/offer)
 FIX_SEND {USERNAME} 35=V|262=ID|263=1|264=0|267=2|269=0|269=1|146=1|55=TSTMKT -d | -F 262
 
 # Alternative syntax using groups

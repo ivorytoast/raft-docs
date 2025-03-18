@@ -49,7 +49,8 @@ function FunctionsVariables() {
         <div className="bg-gray-50 p-4 rounded-lg mb-6">
           <TemplateText
             description="Simple block example"
-            text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
+            text={`@simple_block
+FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
 FIX_LOGOFF {USERNAME}`}
           />
           <p className="mt-2 text-sm text-gray-600">
@@ -69,7 +70,8 @@ FIX_LOGOFF {USERNAME}`}
         <div className="bg-gray-50 p-4 rounded-lg mb-6">
           <TemplateText
             description="Chaining blocks example"
-            text={`raft_docs_simple_block`}
+            text={`@block_that_calls_other_blocks
+raft_docs_simple_block`}
           />
           <p className="mt-2 text-sm text-gray-600">
             Executes the commands defined in <span className="bg-purple-100 px-1 rounded">raft_docs_simple_block</span>
@@ -94,7 +96,8 @@ FIX_LOGOFF {USERNAME}`}
         <div className="bg-gray-50 p-4 rounded-lg mb-6">
           <TemplateText
             description="Block with arguments definition"
-            text={`$alias
+            text={`@block_with_variables
+$alias
 $password=p
 $sender=helloworld:<string>
 $target=BGC:<string:BGC>`}
@@ -118,7 +121,8 @@ $target=BGC:<string:BGC>`}
           <h4 className="text-md font-semibold mb-2 text-gray-700">Basic Variable Capture:</h4>
           <TemplateText
             description="Live variables simple example"
-            text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
+            text={`@live_variables_simple_example
+FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
 FIX_SEND {USERNAME} 35=x|320=ID|559=0|55=TSTMKT|263=1 -d | -F 320
 FIX_CAPTURE {USERNAME} 320 LIVEVARSIMPLE -o true
 FIX_ACK {USERNAME} -p [35=y 320=LOAD_VAR({USERNAME},LIVEVARSIMPLE) 893=Y]
@@ -155,7 +159,8 @@ FIX_LOGOFF {USERNAME}`}
         <div className="bg-gray-50 p-4 rounded-lg mb-6">
           <TemplateText
             description="Standard library example"
-            text={`FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
+            text={`@standard_library_example
+FIX_LOGON {USERNAME} {PASSWORD} {SENDER_COMPUTER_ID} {TARGET_COMP_ID}
 SECURITY_LIST_REQUEST_SINGLE_SYMBOL $alias={USERNAME}
 FIX_LOGOFF {USERNAME}`}
           />
